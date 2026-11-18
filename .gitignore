@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+venv/
+.venv/
+
+# Real credentials and run output
+_keys.py
+.env
+_threats.jsonl

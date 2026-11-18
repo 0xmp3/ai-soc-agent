@@ -1,0 +1,7 @@
+openai
+azure-identity
+azure-monitor-query
+pandas
+requests
+tiktoken
+colorama
