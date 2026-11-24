@@ -62,6 +62,26 @@ Not estimates dressed as results — these are read off the OpenAI usage dashboa
 
 Because the point was to bound the cost and the blast radius myself, in code I can read. Copilot for Security is licensed against a consumption unit you buy in advance; this runs about two cents an investigation on a pay-as-you-go key, and every limit that stops it doing something stupid is a line in `GUARDRAILS.py` rather than a setting in a portal. That trade — less coverage, fully inspectable guarantees — is the whole design. It is not a replacement for a licensed product and does not try to be.
 
+## The same flow on LangGraph
+
+[`implementations/langgraph/`](implementations/langgraph/) is this same hunt → gate →
+contain flow written against LangGraph, reusing the allowlist above rather than copying
+it. It exists to answer one question with evidence: what does an agent framework actually
+buy a security agent?
+
+| | Hand-rolled (`EXECUTOR.py`) | LangGraph port |
+|---|---|---|
+| Control flow | `hunt()` returns a function call, `_main.py` dispatches | `StateGraph`: plan → gate → contain |
+| Pending action across a restart | **lost** — held in memory | **survives** — SQLite checkpointer |
+| Guardrail violation | `exit(1)`, the run dies | returned as a value, nothing contained |
+| Offline tests | 39 | 8, including resume in a new process |
+
+Porting surfaced three things, all reproducible: `validate_tables_and_fields` exits the
+process (wrong inside a node), `AlertInfo` and `AlertEvidence` are allowlisted with empty
+field sets so every query against them is rejected, and a refusal should finish the run
+rather than park it for approval. Details and commands in
+[that README](implementations/langgraph/README.md).
+
 ## Run it
 
 ```bash
