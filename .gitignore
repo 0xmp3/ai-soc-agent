@@ -8,3 +8,7 @@ venv/
 _keys.py
 .env
 _threats.jsonl
+
+# LangGraph checkpoints are run output, not fixtures
+implementations/langgraph/hunt.db
+*.db-journal

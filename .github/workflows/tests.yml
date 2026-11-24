@@ -20,5 +20,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt pytest
 
+      # Scoped to tests/ on purpose: the agent's own suite must run with nothing
+      # beyond requirements.txt. The LangGraph implementation has its own deps and
+      # its own step, so a reviewer sees the two are separable.
       - name: Run tests
-        run: python -m pytest -q
+        run: python -m pytest tests -q
+
+      - name: Install LangGraph implementation dependencies
+        run: pip install -r implementations/langgraph/requirements.txt
+
+      - name: Run LangGraph implementation tests
+        run: python -m pytest implementations/langgraph -q
